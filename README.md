@@ -1,4 +1,4 @@
-# web_view_app
+# Flutter basics
 
 A new Flutter application.
 
