@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:web_view_app/utils/pushAnimation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:web_view_app/TMDBConfig.dart';
@@ -66,6 +67,28 @@ List<NowPlayingMovie> createNowPlayingList(List data) {
   return list;
 }
 
+_pushAnimation(BuildContext context, NowPlayingMovie movies) {
+  // 1
+  Navigator.of(context).push(new PageRouteBuilder(
+      opaque: true,
+      // 2
+      transitionDuration: const Duration(milliseconds: 1000),
+      // 3
+      pageBuilder: (BuildContext context, _, __) {
+        return new DetailScreen(movieDetail: movies);
+      },
+      // 4
+      transitionsBuilder: (_, Animation<double> animation, __, Widget child) {
+        return new FadeTransition(
+          opacity: animation,
+          child: new RotationTransition(
+            turns: new Tween<double>(begin: 0.0, end: 1.0).animate(animation),
+            child: child,
+          ),
+        );
+      }));
+}
+
 List<Widget> createNowPlayingMovieItem(
     List<NowPlayingMovie> movies, BuildContext context) {
   List<Widget> listElementWidget = new List<Widget>();
@@ -89,8 +112,9 @@ List<Widget> createNowPlayingMovieItem(
         child: GestureDetector(
             onTap: () {
               if (movie.id > 0) {
-                Navigator.push(context,
-                    new MaterialPageRoute(builder: (_) => new DetailScreen()));
+                _pushAnimation(context, movies[i]);
+                /* Navigator.push(context,
+                    new MaterialPageRoute(builder: (_) => new DetailScreen()));*/
               }
             },
             child: FadeInImage.memoryNetwork(

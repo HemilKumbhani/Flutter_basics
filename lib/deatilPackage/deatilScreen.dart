@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:web_view_app/model/NowPlayingMovie.dart';
 
 class DetailScreen extends StatefulWidget {
+  NowPlayingMovie movieDetail;
+
+  DetailScreen({this.movieDetail});
+
   @override
   State<StatefulWidget> createState() {
+    print(movieDetail.toString());
     return _detailScreen();
   }
 }
@@ -15,7 +21,7 @@ class _detailScreen extends State<DetailScreen> {
     return Container(
       child: new Scaffold(
         appBar: AppBar(
-          title: Text("MovieDetail"),
+          title: Text(widget.movieDetail.title),
         ),
         body: new Container(
           constraints: BoxConstraints.expand(),
@@ -28,7 +34,8 @@ class _detailScreen extends State<DetailScreen> {
                   decoration: BoxDecoration(
                       image: DecorationImage(
                           image: NetworkImage(
-                              'https://coloredbrain.com/wp-content/uploads/2016/07/login-background.jpg'),
+                              "https://image.tmdb.org/t/p/w500/" +
+                                  widget.movieDetail.backdropPath),
                           fit: BoxFit.cover)),
                 ),
                 alignment: AlignmentDirectional.topCenter,
@@ -40,26 +47,37 @@ class _detailScreen extends State<DetailScreen> {
                   decoration: BoxDecoration(
                       image: DecorationImage(
                           image: NetworkImage(
-                              'https://coloredbrain.com/wp-content/uploads/2016/07/login-background.jpg'),
-                          fit: BoxFit.cover)),
+                              "https://image.tmdb.org/t/p/w500/" +
+                                  widget.movieDetail.posterPath),
+                          fit: BoxFit.contain)),
                 ),
                 alignment: AlignmentDirectional.centerStart,
               ),
               Align(
                 child: new Container(
-                    margin: EdgeInsets.only(top: 30),
+                  width: 200,
+                    margin: EdgeInsets.fromLTRB(150,100,0,0),
                     child: new Column(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Container(
-                          child: new Text("Name"),
-                          margin: EdgeInsets.only(top: 10),
+                          child: new Text(widget.movieDetail.title),
+                          margin: EdgeInsets.only(top: 20),
                         ),
-                        Container(
-                          margin: EdgeInsets.all(5),
-                          child: new Text("Genre"),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: <Widget>[
+                            Container(
+                              width:200,
+                              height: 100,
+                              margin: EdgeInsets.only(top: 10),
+                              child: SingleChildScrollView(child: new Text(widget.movieDetail.overview)),
+                            ),
+                          ],
                         )
                       ],
                     )),
@@ -67,8 +85,8 @@ class _detailScreen extends State<DetailScreen> {
               ),
               Positioned(
                 child: Container(
-                  width: double.maxFinite,
-                  decoration: BoxDecoration(color: Colors.blue),
+                  width: 400,
+//                  decoration: BoxDecoration(color: Colors.blue),
                   child: _ListMakers(),
                   height: 100,
                 ),
@@ -82,6 +100,7 @@ class _detailScreen extends State<DetailScreen> {
   }
 
   Widget _ListMakers() {
+
     return ListView.builder(
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.all(16),
