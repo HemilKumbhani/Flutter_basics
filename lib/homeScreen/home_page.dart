@@ -2,14 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:web_view_app/utils/pushAnimation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:web_view_app/TMDBConfig.dart';
-import 'package:web_view_app/deatilPackage/deatilScreen.dart';
-import 'package:web_view_app/model/NowPlayingMovie.dart';
-import 'package:web_view_app/auth/login_form.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:web_view_app/TMDBConfig.dart';
+import 'package:web_view_app/auth/login_form.dart';
+import 'package:web_view_app/model/NowPlayingMovie.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -75,7 +73,7 @@ _pushAnimation(BuildContext context, NowPlayingMovie movies) {
       transitionDuration: const Duration(milliseconds: 1000),
       // 3
       pageBuilder: (BuildContext context, _, __) {
-        return new DetailScreen(movieDetail: movies);
+        return new LoginForm(movies);
       },
       // 4
       transitionsBuilder: (_, Animation<double> animation, __, Widget child) {

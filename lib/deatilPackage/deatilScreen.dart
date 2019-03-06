@@ -4,7 +4,7 @@ import 'package:web_view_app/model/NowPlayingMovie.dart';
 class DetailScreen extends StatefulWidget {
   NowPlayingMovie movieDetail;
 
-  DetailScreen({this.movieDetail});
+  DetailScreen(this.movieDetail);
 
   @override
   State<StatefulWidget> createState() {

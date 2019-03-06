@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:web_view_app/auth/auth.dart';
+import 'package:web_view_app/deatilPackage/deatilScreen.dart';
+import 'package:web_view_app/model/NowPlayingMovie.dart';
 import 'package:web_view_app/utils/utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginForm extends StatefulWidget {
+  NowPlayingMovie movie;
+
+  LoginForm(this.movie);
+
   @override
   State<StatefulWidget> createState() {
     return _LoginState();
@@ -11,6 +19,8 @@ class LoginForm extends StatefulWidget {
 class _LoginState extends State<LoginForm> {
 //  final Function _changePage;
 
+  bool _isVisible = true;
+  BaseAuth auth = new Auth();
   BuildContext mContext;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final Map<String, dynamic> _loginData = {'email': null, 'password': null};
@@ -27,7 +37,7 @@ class _LoginState extends State<LoginForm> {
             decoration: BoxDecoration(
                 color: Colors.black,
                 shape: BoxShape.rectangle,
-                  image: DecorationImage(
+                image: DecorationImage(
                     image: NetworkImage(
                         'https://coloredbrain.com/wp-content/uploads/2016/07/login-background.jpg'),
                     fit: BoxFit.cover)),
@@ -35,12 +45,13 @@ class _LoginState extends State<LoginForm> {
             child: Center(
                 child: SingleChildScrollView(
                     child: Column(
-              children: <Widget>[_buildLoginWidget(_formKey, _scaffoldKey)],
-            )))));
+                      children: <Widget>[
+                        _buildLoginWidget(_formKey, _scaffoldKey)],
+                    )))));
   }
 
-  Form _buildLoginWidget(
-      GlobalKey formkey, GlobalKey<ScaffoldState> scaffoldKey) {
+  Form _buildLoginWidget(GlobalKey formkey,
+      GlobalKey<ScaffoldState> scaffoldKey) {
     Widget _buildLoginField() {
       return TextFormField(
         validator: (String v) {
@@ -73,6 +84,21 @@ class _LoginState extends State<LoginForm> {
           });
     }
 
+    Widget _buildSignUpButton() {
+      return new Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          FlatButton(
+            child: Text("Don't have an account, Sign Up"),
+            textColor: Colors.white,
+            onPressed: () {},
+          )
+        ],
+      );
+    }
+
     return Form(
         key: _formKey,
         child: Container(
@@ -88,28 +114,53 @@ class _LoginState extends State<LoginForm> {
               SizedBox(
                 height: 15,
               ),
-              new Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  FlatButton(
-                    child: Text("Create an account, Sign Up"),
-                    textColor: Colors.white,
-                    onPressed: () {
-                      scaffoldKey.currentState
-                          .showSnackBar(SnackBar(content: Text("da")));
-                    },
-                  )
-                ],
-              ),
-              new FlatButton(
-                onPressed: () {},
-                child: Text("Sign Up"),
-                textColor: Colors.white,
+              _buildSignUpButton(),
+              Visibility(child: SigninButton(), visible: _isVisible),
+              Visibility(
+                child: new CircularProgressIndicator(),
+                visible: !_isVisible,
               )
             ],
           ),
         ));
+  }
+
+  FlatButton SigninButton() {
+    return new FlatButton(
+      onPressed: () {
+        _validateAndSubmit(_loginData['email'], _loginData['password']);
+      },
+      child: Text("Sign In"),
+      textColor: Colors.white,
+    );
+  }
+
+  bool _validateAndSave() {
+    final form = _formKey.currentState;
+
+    if (form.validate()) {
+      form.save();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void _validateAndSubmit(String email, String password) async {
+    String userId = "";
+    try {
+      if (_validateAndSave()) {
+        _isVisible = false;
+        userId = await auth.signIn(email, password);
+
+        Navigator.pop(
+            context,
+            new MaterialPageRoute(
+                builder: (_) => new DetailScreen(widget.movie)));
+        print('Signed up user: $userId');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
   }
 }
