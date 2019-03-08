@@ -7,6 +7,9 @@ import 'package:flutter/widgets.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:web_view_app/TMDBConfig.dart';
 import 'package:web_view_app/auth/login_form.dart';
+import 'package:web_view_app/database/DbProvider.dart';
+import 'package:web_view_app/database/User.dart';
+import 'package:web_view_app/deatilPackage/deatilScreen.dart';
 import 'package:web_view_app/model/NowPlayingMovie.dart';
 
 class HomePage extends StatefulWidget {
@@ -14,6 +17,13 @@ class HomePage extends StatefulWidget {
   State<StatefulWidget> createState() {
     return _homePage();
   }
+}
+
+Future<User> fetchUserFromDatabase() async {
+  var dbHelper = DbProvider();
+  Future<User> user = dbHelper.getUser();
+  print(dbHelper.getUser());
+  return user;
 }
 
 Future<List<NowPlayingMovie>> getNowPlayingMOvies() async {
@@ -65,17 +75,17 @@ List<NowPlayingMovie> createNowPlayingList(List data) {
   return list;
 }
 
-_pushAnimation(BuildContext context, NowPlayingMovie movies) {
-  // 1
+_pushAnimation(BuildContext context, NowPlayingMovie movies, bool isLoggedIn) {
   Navigator.of(context).push(new PageRouteBuilder(
       opaque: true,
-      // 2
       transitionDuration: const Duration(milliseconds: 1000),
-      // 3
       pageBuilder: (BuildContext context, _, __) {
-        return new LoginForm(movies);
+        if (!isLoggedIn) {
+          return new LoginForm(movies);
+        } else {
+          return new DetailScreen(movies);
+        }
       },
-      // 4
       transitionsBuilder: (_, Animation<double> animation, __, Widget child) {
         return new FadeTransition(
           opacity: animation,
@@ -90,6 +100,8 @@ _pushAnimation(BuildContext context, NowPlayingMovie movies) {
 List<Widget> createNowPlayingMovieItem(
     List<NowPlayingMovie> movies, BuildContext context) {
   List<Widget> listElementWidget = new List<Widget>();
+  var dbHelper = DbProvider();
+  dbHelper.initDb();
   /**
    * Making item for list
    */
@@ -110,7 +122,25 @@ List<Widget> createNowPlayingMovieItem(
         child: GestureDetector(
             onTap: () {
               if (movie.id > 0) {
-                _pushAnimation(context, movies[i]);
+                /*new FutureBuilder(
+                    future: fetchUserFromDatabase(),
+                    builder: (context, snapshot) {
+                      print("data:" + snapshot.hasData.toString());
+                      if (snapshot.data.length == 0) {
+                        return _pushAnimation(context, movies[i], false);
+                      } else if (snapshot.hasData) {
+                        return _pushAnimation(context, movies[i], true);
+                      }
+                    });*/
+
+                dbHelper.getUser().then((dynamic res) {
+                  if (res == null) {
+                    _pushAnimation(context, movies[i], false);
+                  } else {
+                    _pushAnimation(context, movies[i], true);
+                  }
+                });
+
                 /* Navigator.push(context,
                     new MaterialPageRoute(builder: (_) => new DetailScreen()));*/
               }
@@ -164,3 +194,5 @@ class _homePage extends State<HomePage> {
     );
   }
 }
+
+FutureOr onUserAvialable() {}

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:web_view_app/auth/auth.dart';
+import 'package:web_view_app/database/DbProvider.dart';
+import 'package:web_view_app/database/User.dart';
 import 'package:web_view_app/deatilPackage/deatilScreen.dart';
 import 'package:web_view_app/model/NowPlayingMovie.dart';
 import 'package:web_view_app/utils/utils.dart';
@@ -205,6 +207,11 @@ class _LoginState extends State<LoginForm> {
           userId =
               await auth.signUp(_loginData['email'], _loginData['password']);
         }
+        var dbHelper = DbProvider();
+        var user =
+            User(email: _loginData['email'], password: _loginData['password']);
+        dbHelper.saveUser(user);
+
         Navigator.pushReplacement(
             context,
             new MaterialPageRoute(
@@ -212,6 +219,14 @@ class _LoginState extends State<LoginForm> {
         print('Signed up user: $userId');
       }
     } catch (e) {
+      setState(() {
+        _isVisible = true;
+      });
+      Scaffold.of(_formKey.currentContext).showSnackBar(SnackBar(
+        content: Text('Error: $e'),
+        duration: Duration(seconds: 3),
+      ));
+
       print('Error: $e');
     }
   }
