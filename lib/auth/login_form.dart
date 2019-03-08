@@ -3,12 +3,12 @@ import 'package:web_view_app/auth/auth.dart';
 import 'package:web_view_app/database/DbProvider.dart';
 import 'package:web_view_app/database/User.dart';
 import 'package:web_view_app/deatilPackage/deatilScreen.dart';
-import 'package:web_view_app/model/NowPlayingMovie.dart';
+import 'package:web_view_app/model/MoviesModel.dart';
 import 'package:web_view_app/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginForm extends StatefulWidget {
-  NowPlayingMovie movie;
+  MoviesModel movie;
 
   LoginForm(this.movie);
 

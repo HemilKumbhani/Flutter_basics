@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:web_view_app/model/NowPlayingMovie.dart';
+import 'package:web_view_app/model/MoviesModel.dart';
 
 class DetailScreen extends StatefulWidget {
-  NowPlayingMovie movieDetail;
+  MoviesModel movieDetail;
 
   DetailScreen(this.movieDetail);
 

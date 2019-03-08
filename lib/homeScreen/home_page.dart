@@ -10,7 +10,8 @@ import 'package:web_view_app/auth/login_form.dart';
 import 'package:web_view_app/database/DbProvider.dart';
 import 'package:web_view_app/database/User.dart';
 import 'package:web_view_app/deatilPackage/deatilScreen.dart';
-import 'package:web_view_app/model/NowPlayingMovie.dart';
+import 'package:web_view_app/homeScreen/itemMovie.dart';
+import 'package:web_view_app/model/MoviesModel.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -26,7 +27,7 @@ Future<User> fetchUserFromDatabase() async {
   return user;
 }
 
-Future<List<NowPlayingMovie>> getNowPlayingMOvies() async {
+Future<List<MoviesModel>> getNowPlayingMOvies() async {
   final String nowPlaying =
       'https://api.themoviedb.org/3/movie/now_playing?api_key=' +
           TMDBConfig.apiKey +
@@ -45,7 +46,7 @@ Future<List<NowPlayingMovie>> getNowPlayingMOvies() async {
 
       List resultList = data['results'];
 
-      List<NowPlayingMovie> list = createNowPlayingList(resultList);
+      List<MoviesModel> list = createNowPlayingList(resultList);
       return list;
     } else {
       print("Failed http call.");
@@ -56,8 +57,8 @@ Future<List<NowPlayingMovie>> getNowPlayingMOvies() async {
   return null;
 }
 
-List<NowPlayingMovie> createNowPlayingList(List data) {
-  List<NowPlayingMovie> list = new List();
+List<MoviesModel> createNowPlayingList(List data) {
+  List<MoviesModel> list = new List();
   for (int i = 0; i < data.length; i++) {
     var id = data[i]["id"];
     String title = data[i]["title"];
@@ -68,14 +69,14 @@ List<NowPlayingMovie> createNowPlayingList(List data) {
     String overview = data[i]["overview"];
     String releaseDate = data[i]["release_date"];
 
-    NowPlayingMovie movie = NowPlayingMovie(id, title, posterPath,
+    MoviesModel movie = MoviesModel(id, title, posterPath,
         backdropImage, originalTitle, voteAverage, overview, releaseDate);
     list.add(movie);
   }
   return list;
 }
 
-_pushAnimation(BuildContext context, NowPlayingMovie movies, bool isLoggedIn) {
+_pushAnimation(BuildContext context, MoviesModel movies, bool isLoggedIn) {
   Navigator.of(context).push(new PageRouteBuilder(
       opaque: true,
       transitionDuration: const Duration(milliseconds: 1000),
@@ -97,65 +98,6 @@ _pushAnimation(BuildContext context, NowPlayingMovie movies, bool isLoggedIn) {
       }));
 }
 
-List<Widget> createNowPlayingMovieItem(
-    List<NowPlayingMovie> movies, BuildContext context) {
-  List<Widget> listElementWidget = new List<Widget>();
-  var dbHelper = DbProvider();
-  dbHelper.initDb();
-  /**
-   * Making item for list
-   */
-  if (movies != null) {
-    int sizeOfList = movies.length;
-    for (int i = 0; i < sizeOfList; i++) {
-      NowPlayingMovie movie = movies[i];
-      //ImageURl
-      var imageUrl = "https://image.tmdb.org/t/p/w500/" + movie.posterPath;
-      //List Item Created with an image of Poster
-      var listItem = new GridTile(
-        //Footer of GridBlock
-        footer: new GridTileBar(
-          backgroundColor: Colors.black45,
-          title: new Text(movie.title),
-        ),
-        //onClick of whole item,
-        child: GestureDetector(
-            onTap: () {
-              if (movie.id > 0) {
-                /*new FutureBuilder(
-                    future: fetchUserFromDatabase(),
-                    builder: (context, snapshot) {
-                      print("data:" + snapshot.hasData.toString());
-                      if (snapshot.data.length == 0) {
-                        return _pushAnimation(context, movies[i], false);
-                      } else if (snapshot.hasData) {
-                        return _pushAnimation(context, movies[i], true);
-                      }
-                    });*/
-
-                dbHelper.getUser().then((dynamic res) {
-                  if (res == null) {
-                    _pushAnimation(context, movies[i], false);
-                  } else {
-                    _pushAnimation(context, movies[i], true);
-                  }
-                });
-
-                /* Navigator.push(context,
-                    new MaterialPageRoute(builder: (_) => new DetailScreen()));*/
-              }
-            },
-            child: FadeInImage.memoryNetwork(
-              placeholder: kTransparentImage,
-              image: imageUrl,
-              fit: BoxFit.cover,
-            )),
-      );
-      listElementWidget.add(listItem);
-    }
-  }
-  return listElementWidget;
-}
 
 class _homePage extends State<HomePage> {
   @override
@@ -184,7 +126,7 @@ class _homePage extends State<HomePage> {
                       crossAxisSpacing: 10.0,
                       mainAxisSpacing: 10.0,
                       crossAxisCount: 2,
-                      children: createNowPlayingMovieItem(movies, context),
+                      children: createNowPlayingMovieItem(movies, context,widget),
                     ),
                   )
                 ],
