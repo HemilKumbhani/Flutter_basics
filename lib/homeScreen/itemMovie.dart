@@ -2,12 +2,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:web_view_app/auth/login_form.dart';
 import 'package:web_view_app/database/DbProvider.dart';
+import 'package:web_view_app/deatilPackage/deatilScreen.dart';
 import 'package:web_view_app/model/MoviesModel.dart';
-import 'home_page.dart';
+
 
 List<Widget> createNowPlayingMovieItem(
-    List<MoviesModel> movies, BuildContext context,HomePage  homepage) {
+    List<MoviesModel> movies, BuildContext context) {
   List<Widget> listElementWidget = new List<Widget>();
   var dbHelper = DbProvider();
   dbHelper.initDb();
@@ -33,9 +35,9 @@ List<Widget> createNowPlayingMovieItem(
               if (movie.id > 0) {
                 dbHelper.getUser().then((dynamic res) {
                   if (res == null) {
-                   homepage._pushAnimation(context, movies[i], false);
+                   _pushAnimation(context, movies[i], false);
                   } else {
-                    context._pushAnimation(context, movies[i], true);
+                    _pushAnimation(context, movies[i], true);
                   }
                 });
 
@@ -54,3 +56,25 @@ List<Widget> createNowPlayingMovieItem(
   }
   return listElementWidget;
 }
+void _pushAnimation(BuildContext context, MoviesModel movies, bool isLoggedIn) {
+  Navigator.of(context).push(new PageRouteBuilder(
+      opaque: true,
+      transitionDuration: const Duration(milliseconds: 1000),
+      pageBuilder: (BuildContext context, _, __) {
+        if (!isLoggedIn) {
+          return new LoginForm(movies);
+        } else {
+          return new DetailScreen(movies);
+        }
+      },
+      transitionsBuilder: (_, Animation<double> animation, __, Widget child) {
+        return new FadeTransition(
+          opacity: animation,
+          child: new RotationTransition(
+            turns: new Tween<double>(begin: 0.0, end: 1.0).animate(animation),
+            child: child,
+          ),
+        );
+      }));
+}
+

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'login_page.dart';
 
 class AuthPage extends StatefulWidget {
   @override
