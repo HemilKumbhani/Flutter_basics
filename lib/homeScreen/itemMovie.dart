@@ -1,15 +1,12 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
-import 'package:web_view_app/auth/login_form.dart';
 import 'package:web_view_app/database/DbProvider.dart';
 import 'package:web_view_app/deatilPackage/deatilScreen.dart';
 import 'package:web_view_app/model/MoviesModel.dart';
 
-
 List<Widget> createNowPlayingMovieItem(
-    List<MoviesModel> movies, BuildContext context) {
+    List<MoviesModel> movies, BuildContext context, String movieTypeTitle) {
   List<Widget> listElementWidget = new List<Widget>();
   var dbHelper = DbProvider();
   dbHelper.initDb();
@@ -35,9 +32,9 @@ List<Widget> createNowPlayingMovieItem(
               if (movie.id > 0) {
                 dbHelper.getUser().then((dynamic res) {
                   if (res == null) {
-                   _pushAnimation(context, movies[i], false);
+                    _pushAnimation(context, movies[i], i, false,movieTypeTitle);
                   } else {
-                    _pushAnimation(context, movies[i], true);
+                    _pushAnimation(context, movies[i], i, true,movieTypeTitle);
                   }
                 });
 
@@ -45,10 +42,13 @@ List<Widget> createNowPlayingMovieItem(
                     new MaterialPageRoute(builder: (_) => new DetailScreen()));*/
               }
             },
-            child: FadeInImage.memoryNetwork(
-              placeholder: kTransparentImage,
-              image: imageUrl,
-              fit: BoxFit.cover,
+            child: Hero(
+              tag: movie.title + "thumb" +movieTypeTitle,
+              child: FadeInImage.memoryNetwork(
+                placeholder: kTransparentImage,
+                image: imageUrl,
+                fit: BoxFit.cover,
+              ),
             )),
       );
       listElementWidget.add(listItem);
@@ -56,15 +56,17 @@ List<Widget> createNowPlayingMovieItem(
   }
   return listElementWidget;
 }
-void _pushAnimation(BuildContext context, MoviesModel movies, bool isLoggedIn) {
-  Navigator.of(context).push(new PageRouteBuilder(
+
+void _pushAnimation(
+    BuildContext context, MoviesModel movies, int index, bool isLoggedIn, String movieTypeTitle) {
+/*  Navigator.of(context).push(new PageRouteBuilder(
       opaque: true,
       transitionDuration: const Duration(milliseconds: 1000),
       pageBuilder: (BuildContext context, _, __) {
         if (!isLoggedIn) {
           return new LoginForm(movies);
         } else {
-          return new DetailScreen(movies);
+          return new DetailScreen(movies, index);
         }
       },
       transitionsBuilder: (_, Animation<double> animation, __, Widget child) {
@@ -75,6 +77,11 @@ void _pushAnimation(BuildContext context, MoviesModel movies, bool isLoggedIn) {
             child: child,
           ),
         );
-      }));
-}
+      }));*/
 
+  Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => DetailScreen(movies, index,movieTypeTitle),
+          fullscreenDialog: true));
+}

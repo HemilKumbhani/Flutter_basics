@@ -212,11 +212,11 @@ class _LoginState extends State<LoginForm> {
             User(email: _loginData['email'], password: _loginData['password']);
         dbHelper.saveUser(user);
 
-        Navigator.pushReplacement(
+        /*   Navigator.pushReplacement(
             context,
             new MaterialPageRoute(
                 builder: (_) => new DetailScreen(widget.movie)));
-        print('Signed up user: $userId');
+        print('Signed up user: $userId');*/
       }
     } catch (e) {
       setState(() {

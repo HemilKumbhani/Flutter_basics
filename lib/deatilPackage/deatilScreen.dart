@@ -1,20 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:transparent_image/transparent_image.dart';
+import 'package:web_view_app/deatilPackage/WebSerivceCaller.dart';
+import 'package:web_view_app/homeScreen/WebServiceCall.dart';
 import 'package:web_view_app/model/MoviesModel.dart';
 
 class DetailScreen extends StatefulWidget {
   MoviesModel movieDetail;
+  int index;
+  String movieTypeTitle;
 
-  DetailScreen(this.movieDetail);
+  DetailScreen(this.movieDetail, int index, String movieTypeTitle) {
+    this.index = index;
+    this.movieTypeTitle = movieTypeTitle;
+  }
 
   @override
   State<StatefulWidget> createState() {
     print(movieDetail.toString());
-    return _detailScreen();
+    return _detailScreen(index);
   }
 }
 
 class _detailScreen extends State<DetailScreen> {
   List<String> producersList = new List();
+  int index;
+
+  _detailScreen(int index) {
+    this.index = index;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,74 +36,88 @@ class _detailScreen extends State<DetailScreen> {
         appBar: AppBar(
           title: Text(widget.movieDetail.title),
         ),
-        body: new Container(
-          constraints: BoxConstraints.expand(),
-          color: Colors.transparent,
-          child: new Stack(
+        body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Column(
             children: <Widget>[
-              Align(
-                child: new Container(
-                  height: 250,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: NetworkImage(
-                              "https://image.tmdb.org/t/p/w500/" +
-                                  widget.movieDetail.backdropPath),
-                          fit: BoxFit.cover)),
-                ),
-                alignment: AlignmentDirectional.topCenter,
-              ),
-              Align(
-                child: new Container(
-                  height: 150,
-                  width: 150,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: NetworkImage(
-                              "https://image.tmdb.org/t/p/w500/" +
-                                  widget.movieDetail.posterPath),
-                          fit: BoxFit.contain)),
-                ),
-                alignment: AlignmentDirectional.centerStart,
-              ),
-              Align(
-                child: new Container(
-                  width: 200,
-                    margin: EdgeInsets.fromLTRB(150,100,0,0),
-                    child: new Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          child: new Text(widget.movieDetail.title),
-                          margin: EdgeInsets.only(top: 20),
+              Container(
+                height: 400,
+                child: Stack(
+                  children: <Widget>[
+                    Align(
+                      child: new Container(
+                        height: 250,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: NetworkImage(
+                                    "https://image.tmdb.org/t/p/w500/" +
+                                        widget.movieDetail.backdropPath),
+                                fit: BoxFit.cover)),
+                      ),
+                      alignment: AlignmentDirectional.topCenter,
+                    ),
+                    Positioned(
+                      left: 10,
+                      bottom: 70,
+                      child: Hero(
+                        tag: widget.movieDetail.title +
+                            "thumb" +
+                            widget.movieTypeTitle,
+                        child: new Container(
+                          height: 150,
+                          width: 150,
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: NetworkImage(
+                                      "https://image.tmdb.org/t/p/w500/" +
+                                          widget.movieDetail.posterPath),
+                                  fit: BoxFit.contain)),
                         ),
-                        Column(
+                      ),
+                    ),
+                    Positioned(
+                      right: 10,
+                      bottom: 0,
+                      child: new Container(
+                        width: 200,
+                        margin: EdgeInsets.fromLTRB(150, 100, 0, 0),
+                        child: new Column(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Container(
-                              width:200,
-                              height: 100,
-                              margin: EdgeInsets.only(top: 10),
-                              child: SingleChildScrollView(child: new Text(widget.movieDetail.overview)),
+                                child: Text(
+                                  widget.movieDetail.title,
+                                  style: TextStyle(fontSize: 15, color: Colors.green,fontStyle: FontStyle.italic),
+                                ),
+                              margin: EdgeInsets.only(top: 20),
                             ),
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: <Widget>[
+                                Container(
+                                  width: 200,
+                                  height: 100,
+                                  margin: EdgeInsets.only(top: 10),
+                                  child: SingleChildScrollView(
+                                      child: new Text(
+                                          widget.movieDetail.overview)),
+                                ),
+                              ],
+                            )
                           ],
-                        )
-                      ],
-                    )),
-                alignment: AlignmentDirectional.center,
-              ),
-              Positioned(
-                child: Container(
-                  width: 400,
-//                  decoration: BoxDecoration(color: Colors.blue),
-                  child: _ListMakers(),
-                  height: 100,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                bottom: 10,
+              ),
+              Container(
+                child: createMovieListView(widget.movieDetail.id),
+                height: 200,
               ),
             ],
           ),
@@ -99,23 +126,105 @@ class _detailScreen extends State<DetailScreen> {
     );
   }
 
-  Widget _ListMakers() {
+  Widget createMovieListView(int movie_id) {
+    return new FutureBuilder(
+        future: getSimilarMovie(movie_id),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (!snapshot.hasData) return new Container(
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
 
+          );
+          if (snapshot.hasData) {
+            List movies = snapshot.data;
+            return Column(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      child: Text("Similar Movie"),
+                      margin: EdgeInsets.all(10),
+                    ),
+                  ],
+                ),
+                Container(
+                  height: 150,
+                  child: new ListView.builder(
+                    itemCount: movies.length,
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, position) {
+                      MoviesModel movie = movies[position];
+                      return movieItem(
+                          movie, "Similar Movie", context, position);
+                    },
+                  ),
+                ),
+              ],
+            );
+          }
+        });
+  }
+
+/*
+  Widget _ListMakers() {
     return ListView.builder(
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.all(16),
         shrinkWrap: true,
         itemCount: 50,
-        itemBuilder: (context, i) {
-          producersList.add("India" + i.toString());
-          return Widget_buidColumn(producersList[i]);
+        itemBuilder: (context, position) {
+          return movieItem(movie, movieTypeTitle, context, position);
         });
-  }
+  }*/
 
-  Widget_buidColumn(String text) {
-    return new Container(
-        // color: Colors.blue,
-        padding: const EdgeInsets.all(10.0),
-        child: new Row(children: [new Text(text)]));
+  Hero movieItem(MoviesModel movie, String movieTypeTitle, BuildContext context,
+      int position) {
+    return Hero(
+        tag: movie.title + "thumb" + movieTypeTitle,
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        DetailScreen(movie, position, movieTypeTitle),
+                    fullscreenDialog: true));
+          },
+          child: Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(left: 2.5, right: 2.5),
+                child: FadeInImage.memoryNetwork(
+                  height: 150,
+                  width: 100,
+                  placeholder: kTransparentImage,
+                  image: "https://image.tmdb.org/t/p/w500/" + movie.posterPath,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Align(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.all(2.5),
+                      width: 100,
+                      decoration: BoxDecoration(color: Colors.black45),
+                      child: Text(
+                        movie.title,
+                        style: TextStyle(fontSize: 15, color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+                alignment: Alignment.bottomCenter,
+              )
+            ],
+          ),
+        ));
   }
 }
