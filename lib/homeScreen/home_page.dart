@@ -1,17 +1,13 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:transparent_image/transparent_image.dart';
-import 'package:web_view_app/TMDBConfig.dart';
-import 'package:web_view_app/auth/login_form.dart';
 import 'package:web_view_app/database/DbProvider.dart';
 import 'package:web_view_app/database/User.dart';
 import 'package:web_view_app/deatilPackage/deatilScreen.dart';
 import 'package:web_view_app/homeScreen/WebServiceCall.dart';
-import 'package:web_view_app/homeScreen/itemMovie.dart';
 import 'package:web_view_app/model/MoviesModel.dart';
 
 class HomePage extends StatefulWidget {
@@ -35,6 +31,7 @@ class _homePage extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: new AppBar(
+          backgroundColor: Colors.black,
           title: new Text("NowPlayingMovies"),
         ),
         body: Stack(
@@ -127,23 +124,8 @@ Hero movieItem(MoviesModel movie, String movieTypeTitle, BuildContext context,
       },
       child: GestureDetector(
         onTap: () {
-          Navigator.of(context).push(new PageRouteBuilder(
-              opaque: true,
-              transitionDuration: const Duration(milliseconds: 1000),
-              pageBuilder: (BuildContext context, _, __) {
-                return DetailScreen(movie, position, movieTypeTitle);
-              },
-              transitionsBuilder:
-                  (_, Animation<double> animation, __, Widget child) {
-                return new FadeTransition(
-                  opacity: animation,
-                  child: new RotationTransition(
-                    turns: new Tween<double>(begin: 0.0, end: 1.0)
-                        .animate(animation),
-                    child: child,
-                  ),
-                );
-              }));
+
+        Navigator.push(context, new CupertinoPageRoute(builder: (_)=> new DetailScreen(movie, position, movieTypeTitle)));
         },
         child: Stack(
           alignment: Alignment.center,

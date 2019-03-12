@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:web_view_app/deatilPackage/WebSerivceCaller.dart';
-import 'package:web_view_app/homeScreen/WebServiceCall.dart';
 import 'package:web_view_app/model/MoviesModel.dart';
+import 'package:flutter_youtube/flutter_youtube.dart';
 
 class DetailScreen extends StatefulWidget {
   MoviesModel movieDetail;
@@ -17,16 +19,18 @@ class DetailScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     print(movieDetail.toString());
-    return _detailScreen(index);
+    return _detailScreen(index, movieDetail);
   }
 }
 
 class _detailScreen extends State<DetailScreen> {
-  List<String> producersList = new List();
+  List<String> posterList = new List();
   int index;
 
-  _detailScreen(int index) {
+  _detailScreen(int index, MoviesModel movieDetail) {
     this.index = index;
+    posterList.add(movieDetail.posterPath);
+    posterList.add(movieDetail.backdropPath);
   }
 
   @override
@@ -34,6 +38,7 @@ class _detailScreen extends State<DetailScreen> {
     return Container(
       child: new Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.black,
           title: Text(widget.movieDetail.title),
         ),
         body: SingleChildScrollView(
@@ -45,14 +50,26 @@ class _detailScreen extends State<DetailScreen> {
                 child: Stack(
                   children: <Widget>[
                     Align(
-                      child: new Container(
-                        height: 250,
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    "https://image.tmdb.org/t/p/w500/" +
-                                        widget.movieDetail.backdropPath),
-                                fit: BoxFit.cover)),
+                      child: GestureDetector(
+                        onTap: () {
+
+                          buildPlayYoutubeVideoById();
+                        },
+                        child: new Container(
+                          height: 250,
+                          child: Swiper(
+                              itemCount: posterList.length,
+                              autoplay: true,
+                              scale: 20,
+                              itemBuilder: (BuildContext context, int index) {
+                                return FadeInImage.memoryNetwork(
+                                  placeholder: kTransparentImage,
+                                  image: "https://image.tmdb.org/t/p/w500/" +
+                                      posterList[index],
+                                  fit: BoxFit.cover,
+                                );
+                              }),
+                        ),
                       ),
                       alignment: AlignmentDirectional.topCenter,
                     ),
@@ -87,10 +104,13 @@ class _detailScreen extends State<DetailScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Container(
-                                child: Text(
-                                  widget.movieDetail.title,
-                                  style: TextStyle(fontSize: 15, color: Colors.green,fontStyle: FontStyle.italic),
-                                ),
+                              child: Text(
+                                widget.movieDetail.title,
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.green,
+                                    fontStyle: FontStyle.italic),
+                              ),
                               margin: EdgeInsets.only(top: 20),
                             ),
                             Column(
@@ -116,7 +136,7 @@ class _detailScreen extends State<DetailScreen> {
                 ),
               ),
               Container(
-                child: createMovieListView(widget.movieDetail.id),
+                child: createSimilarMovieListView(widget.movieDetail.id),
                 height: 200,
               ),
             ],
@@ -126,16 +146,25 @@ class _detailScreen extends State<DetailScreen> {
     );
   }
 
-  Widget createMovieListView(int movie_id) {
+ void buildPlayYoutubeVideoById() {
+    FlutterYoutube.playYoutubeVideoById(
+        apiKey: "AIzaSyBT_9O01_cgjAvjpWa2TDg-75F8AW5JbLA",
+        videoId: "hs3eeBTbmoc",
+        autoPlay: true, //default falase
+        fullScreen: false //default false
+        );
+  }
+
+  Widget createSimilarMovieListView(int movie_id) {
     return new FutureBuilder(
         future: getSimilarMovie(movie_id),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (!snapshot.hasData) return new Container(
-            child: Center(
-              child: CircularProgressIndicator(),
-            ),
-
-          );
+          if (!snapshot.hasData)
+            return new Container(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
           if (snapshot.hasData) {
             List movies = snapshot.data;
             return Column(
@@ -158,7 +187,7 @@ class _detailScreen extends State<DetailScreen> {
                     itemBuilder: (context, position) {
                       MoviesModel movie = movies[position];
                       return movieItem(
-                          movie, "Similar Movie", context, position);
+                          movie, widget.movieTypeTitle, context, position);
                     },
                   ),
                 ),
@@ -188,7 +217,7 @@ class _detailScreen extends State<DetailScreen> {
           onTap: () {
             Navigator.push(
                 context,
-                MaterialPageRoute(
+                CupertinoPageRoute(
                     builder: (context) =>
                         DetailScreen(movie, position, movieTypeTitle),
                     fullscreenDialog: true));
