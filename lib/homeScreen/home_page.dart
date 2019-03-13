@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:web_view_app/database/DbProvider.dart';
 import 'package:web_view_app/database/User.dart';
+import 'package:web_view_app/deatilPackage/AnimationGallery.dart';
 import 'package:web_view_app/deatilPackage/deatilScreen.dart';
 import 'package:web_view_app/homeScreen/WebServiceCall.dart';
 import 'package:web_view_app/model/MoviesModel.dart';
@@ -76,7 +77,7 @@ Widget createMovieListView(String movieType) {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (!snapshot.hasData) return new Container();
         if (snapshot.hasData) {
-          List movies = snapshot.data;
+          List<MoviesModel> movies = snapshot.data;
           return Column(
             children: <Widget>[
               Row(
@@ -95,7 +96,7 @@ Widget createMovieListView(String movieType) {
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, position) {
                     MoviesModel movie = movies[position];
-                    return movieItem(movie, movieTypeTitle, context, position);
+                    return movieItem(movie, movieTypeTitle, context, position,movies);
                   },
                 ),
               ),
@@ -106,7 +107,7 @@ Widget createMovieListView(String movieType) {
 }
 
 Hero movieItem(MoviesModel movie, String movieTypeTitle, BuildContext context,
-    int position) {
+    int position, List<MoviesModel> movies) {
   return Hero(
       tag: movie.title + "thumb" + movieTypeTitle,
       flightShuttleBuilder: (
@@ -125,7 +126,9 @@ Hero movieItem(MoviesModel movie, String movieTypeTitle, BuildContext context,
       child: GestureDetector(
         onTap: () {
 
-        Navigator.push(context, new CupertinoPageRoute(builder: (_)=> new DetailScreen(movie, position, movieTypeTitle)));
+//        Navigator.push(context, new CupertinoPageRoute(builder: (_)=> new DetailScreen(movie, position, movieTypeTitle,movies)));
+        Navigator.push(context, new CupertinoPageRoute(builder: (_)=> new AnimationDemoHome()));
+
         },
         child: Stack(
           alignment: Alignment.center,

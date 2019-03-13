@@ -10,27 +10,31 @@ class DetailScreen extends StatefulWidget {
   MoviesModel movieDetail;
   int index;
   String movieTypeTitle;
+  List<MoviesModel> movies;
 
-  DetailScreen(this.movieDetail, int index, String movieTypeTitle) {
+  DetailScreen(this.movieDetail, int index, String movieTypeTitle, List<MoviesModel> movies) {
     this.index = index;
+    this.movies=movies;
     this.movieTypeTitle = movieTypeTitle;
   }
 
   @override
   State<StatefulWidget> createState() {
     print(movieDetail.toString());
-    return _detailScreen(index, movieDetail);
+    return _detailScreen(index, movieDetail,movies);
   }
 }
 
 class _detailScreen extends State<DetailScreen> {
   List<String> posterList = new List();
   int index;
+  List<MoviesModel> movies;
 
-  _detailScreen(int index, MoviesModel movieDetail) {
+  _detailScreen(int index, MoviesModel movieDetail, List<MoviesModel> movies) {
     this.index = index;
     posterList.add(movieDetail.posterPath);
     posterList.add(movieDetail.backdropPath);
+    this.movies=movies;
   }
 
   @override
@@ -47,94 +51,97 @@ class _detailScreen extends State<DetailScreen> {
             children: <Widget>[
               Container(
                 height: 400,
-                child: Stack(
-                  children: <Widget>[
-                    Align(
-                      child: GestureDetector(
-                        onTap: () {
-
-                          buildPlayYoutubeVideoById();
-                        },
-                        child: new Container(
-                          height: 250,
-                          child: Swiper(
-                              itemCount: posterList.length,
-                              autoplay: true,
-                              scale: 20,
-                              itemBuilder: (BuildContext context, int index) {
-                                return FadeInImage.memoryNetwork(
-                                  placeholder: kTransparentImage,
-                                  image: "https://image.tmdb.org/t/p/w500/" +
-                                      posterList[index],
-                                  fit: BoxFit.cover,
-                                );
-                              }),
-                        ),
-                      ),
-                      alignment: AlignmentDirectional.topCenter,
-                    ),
-                    Positioned(
-                      left: 10,
-                      bottom: 70,
-                      child: Hero(
-                        tag: widget.movieDetail.title +
-                            "thumb" +
-                            widget.movieTypeTitle,
-                        child: new Container(
-                          height: 150,
-                          width: 150,
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: NetworkImage(
-                                      "https://image.tmdb.org/t/p/w500/" +
-                                          widget.movieDetail.posterPath),
-                                  fit: BoxFit.contain)),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      right: 10,
-                      bottom: 0,
-                      child: new Container(
-                        width: 200,
-                        margin: EdgeInsets.fromLTRB(150, 100, 0, 0),
-                        child: new Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Container(
-                              child: Text(
-                                widget.movieDetail.title,
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.green,
-                                    fontStyle: FontStyle.italic),
+                width: 500,
+                child: Swiper(itemBuilder: (BuildContext context,int position){
+                 return Container(
+                    child: Stack(
+                      children: <Widget>[
+                        Align(
+                          child: GestureDetector(
+                            onTap: () {
+                              buildPlayYoutubeVideoById();
+                            },
+                            child: new Container(
+                              height: 250,
+                              child: FadeInImage.memoryNetwork(
+                                placeholder: kTransparentImage,
+                                image: "https://image.tmdb.org/t/p/w500/" +
+                                    movies[position].backdropPath,
+                                fit: BoxFit.cover,
                               ),
-                              margin: EdgeInsets.only(top: 20),
                             ),
-                            Column(
+                          ),
+                          alignment: AlignmentDirectional.topCenter,
+                        ),
+                        Positioned(
+                          left: 10,
+                          bottom: 70,
+                          child: Hero(
+                            tag: widget.movieDetail.title +
+                                "thumb" +
+                                widget.movieTypeTitle,
+                            child: new Container(
+                              height: 150,
+                              width: 150,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: NetworkImage(
+                                          "https://image.tmdb.org/t/p/w500/" +
+                                              movies[position].posterPath),
+                                      fit: BoxFit.contain)),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          right: 10,
+                          bottom: 0,
+                          child: new Container(
+                            width: 200,
+                            margin: EdgeInsets.fromLTRB(150, 100, 0, 0),
+                            child: new Column(
                               mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Container(
-                                  width: 200,
-                                  height: 100,
-                                  margin: EdgeInsets.only(top: 10),
-                                  child: SingleChildScrollView(
-                                      child: new Text(
-                                          widget.movieDetail.overview)),
+                                  child: Text(
+                                movies[position].title,
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.green,
+                                        fontStyle: FontStyle.italic),
+                                  ),
+                                  margin: EdgeInsets.only(top: 20),
                                 ),
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: <Widget>[
+                                    Container(
+                                      width: 200,
+                                      height: 100,
+                                      margin: EdgeInsets.only(top: 10),
+                                      child: SingleChildScrollView(
+                                          child: new Text(
+                                            movies[position].overview)),
+                                    ),
+                                  ],
+                                )
                               ],
-                            )
-                          ],
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
+                  )  ;
+                },
+                itemCount: movies.length,
+                scrollDirection: Axis.horizontal,
+                itemHeight: 400,
+                itemWidth: 600),
               ),
+
               Container(
                 child: createSimilarMovieListView(widget.movieDetail.id),
                 height: 200,
@@ -166,7 +173,7 @@ class _detailScreen extends State<DetailScreen> {
               ),
             );
           if (snapshot.hasData) {
-            List movies = snapshot.data;
+            List<MoviesModel> movies = snapshot.data;
             return Column(
               children: <Widget>[
                 Row(
@@ -187,7 +194,7 @@ class _detailScreen extends State<DetailScreen> {
                     itemBuilder: (context, position) {
                       MoviesModel movie = movies[position];
                       return movieItem(
-                          movie, widget.movieTypeTitle, context, position);
+                          movie, widget.movieTypeTitle, context, position,movies);
                     },
                   ),
                 ),
@@ -210,7 +217,7 @@ class _detailScreen extends State<DetailScreen> {
   }*/
 
   Hero movieItem(MoviesModel movie, String movieTypeTitle, BuildContext context,
-      int position) {
+      int position, List<MoviesModel> movies) {
     return Hero(
         tag: movie.title + "thumb" + movieTypeTitle,
         child: GestureDetector(
@@ -219,7 +226,7 @@ class _detailScreen extends State<DetailScreen> {
                 context,
                 CupertinoPageRoute(
                     builder: (context) =>
-                        DetailScreen(movie, position, movieTypeTitle),
+                        DetailScreen(movie, position, movieTypeTitle,movies),
                     fullscreenDialog: true));
           },
           child: Stack(

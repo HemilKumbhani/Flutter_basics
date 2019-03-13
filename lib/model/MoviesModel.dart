@@ -12,7 +12,4 @@ class MoviesModel {
       this.originalTitle, this.voteAverage, this.overview, this.releaseDate);
 
 
-
-
-
 }
