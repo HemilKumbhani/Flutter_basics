@@ -6,7 +6,6 @@ import 'package:flutter/widgets.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:web_view_app/database/DbProvider.dart';
 import 'package:web_view_app/database/User.dart';
-import 'package:web_view_app/deatilPackage/AnimationGallery.dart';
 import 'package:web_view_app/deatilPackage/deatilScreen.dart';
 import 'package:web_view_app/homeScreen/WebServiceCall.dart';
 import 'package:web_view_app/model/MoviesModel.dart';
@@ -126,8 +125,8 @@ Hero movieItem(MoviesModel movie, String movieTypeTitle, BuildContext context,
       child: GestureDetector(
         onTap: () {
 
-//        Navigator.push(context, new CupertinoPageRoute(builder: (_)=> new DetailScreen(movie, position, movieTypeTitle,movies)));
-        Navigator.push(context, new CupertinoPageRoute(builder: (_)=> new AnimationDemoHome()));
+        Navigator.push(context, new CupertinoPageRoute(builder: (_)=> new DetailScreen(movie, position, movieTypeTitle,movies)));
+//        Navigator.push(context, new CupertinoPageRoute(builder: (_)=> new AnimationDemoHome()));
 
         },
         child: Stack(
