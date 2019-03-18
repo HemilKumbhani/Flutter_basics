@@ -4,6 +4,7 @@ import 'package:transformer_page_view/transformer_page_view.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:web_view_app/deatilPackage/WebSerivceCaller.dart';
 import 'package:web_view_app/deatilPackage/item_movie.dart';
+import 'package:web_view_app/model/MovieVideoModel.dart';
 import 'package:web_view_app/model/MoviesModel.dart';
 import 'package:flutter_youtube/flutter_youtube.dart';
 import 'dart:math' as math;
@@ -35,6 +36,7 @@ class _detailScreen extends State<DetailScreen> {
   List<MoviesModel> movies;
   Rect region;
   PaletteGenerator paletteGenerator;
+  var mVideoId;
 
   _detailScreen(int index, MoviesModel movieDetail, List<MoviesModel> movies) {
     this.index = index;
@@ -95,6 +97,7 @@ class _detailScreen extends State<DetailScreen> {
                   itemCount: movies.length,
                   index: index,
                   onPageChanged: (position) {
+                    getVideos(movies[position].id);
                     setState(() {
                       index = position;
                     });
@@ -108,7 +111,8 @@ class _detailScreen extends State<DetailScreen> {
                             child: Align(
                               child: GestureDetector(
                                 onTap: () {
-                                  buildPlayYoutubeVideoById();
+                                  if (mVideoId != null)
+                                    buildPlayYoutubeVideoById(mVideoId);
                                 },
                                 child: new Container(
                                   height: 250,
@@ -213,13 +217,25 @@ class _detailScreen extends State<DetailScreen> {
     );
   }
 
-  void buildPlayYoutubeVideoById() {
+  void buildPlayYoutubeVideoById(String videoId) {
     FlutterYoutube.playYoutubeVideoById(
         apiKey: "AIzaSyBT_9O01_cgjAvjpWa2TDg-75F8AW5JbLA",
-        videoId: "hs3eeBTbmoc",
+        videoId: videoId,
         autoPlay: true, //default falase
         fullScreen: false //default false
         );
+  }
+
+  void getVideos(int movie_id) {
+
+      Future<MovieVideoModel> videoModel=  getMovieVideoList(movie_id) ;
+      videoModel.then((MovieVideoModel model){
+        setState(() {
+          mVideoId=model.results[0].key;
+        });
+      });
+
+
   }
 
   Widget createSimilarMovieListView(int movie_id) {
