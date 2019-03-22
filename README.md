@@ -4,7 +4,14 @@ A new Flutter application.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This project is on Flutter
+
+Project Includes Sign Up and Sign In Using Firabase Authentication
+Database is included using SQFlite to use user info.
+
+Project contains list of movies and its description in deatil 
+
+I have tried to use varios animation for intuitive effect.
 
 A few resources to get you started if this is your first Flutter project:
 
