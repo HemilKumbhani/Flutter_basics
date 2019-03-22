@@ -1,16 +1,19 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:web_view_app/auth/auth.dart';
+import 'package:web_view_app/auth/Auth.dart';
 import 'package:web_view_app/database/DbProvider.dart';
 import 'package:web_view_app/database/User.dart';
-import 'package:web_view_app/deatilPackage/deatilScreen.dart';
+import 'package:web_view_app/deatilPackage/DetailScreen.dart';
 import 'package:web_view_app/model/MoviesModel.dart';
-import 'package:web_view_app/utils/utils.dart';
+import 'package:web_view_app/utils/Utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginForm extends StatefulWidget {
   MoviesModel movie;
-
-  LoginForm(this.movie);
+  int position;
+  String movieTypeTitle;
+  List<MoviesModel> movies;
+  LoginForm(this.movie, this.position, this.movieTypeTitle, this.movies);
 
   @override
   State<StatefulWidget> createState() {
@@ -37,8 +40,8 @@ class _LoginState extends State<LoginForm> {
         key: _scaffoldKey,
         body: Container(
             decoration: BoxDecoration(
-                color: Colors.black,
-                shape: BoxShape.rectangle,
+                  color: Colors.black,
+                  shape: BoxShape.rectangle,
                 image: DecorationImage(
                     image: NetworkImage(
                         'https://coloredbrain.com/wp-content/uploads/2016/07/login-background.jpg'),
@@ -212,11 +215,9 @@ class _LoginState extends State<LoginForm> {
             User(email: _loginData['email'], password: _loginData['password']);
         dbHelper.saveUser(user);
 
-        /*   Navigator.pushReplacement(
-            context,
-            new MaterialPageRoute(
-                builder: (_) => new DetailScreen(widget.movie)));
-        print('Signed up user: $userId');*/
+        Navigator.pushReplacement(context, new CupertinoPageRoute(builder: (_)=> new DetailScreen(widget.movie,widget. position, widget.movieTypeTitle,widget.movies)));
+
+        print('Signed up user: $userId');
       }
     } catch (e) {
       setState(() {

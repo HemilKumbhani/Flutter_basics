@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:web_view_app/database/DbProvider.dart';
-import 'package:web_view_app/deatilPackage/deatilScreen.dart';
 import 'package:web_view_app/model/MoviesModel.dart';
 
 List<Widget> createNowPlayingMovieItem(

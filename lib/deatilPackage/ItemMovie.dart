@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
-import 'package:web_view_app/deatilPackage/deatilScreen.dart';
+import 'package:web_view_app/deatilPackage/DetailScreen.dart';
 import 'package:web_view_app/model/MoviesModel.dart';
 
 Hero movieItem(MoviesModel movie, String movieTypeTitle, BuildContext context,
     int position, List<MoviesModel> movies) {
   return Hero(
-      tag: movie.title + "thumb" + movieTypeTitle,
+      tag: movie.id.toString() + "thumb" + movieTypeTitle,
       child: GestureDetector(
         onTap: () {
           Navigator.push(

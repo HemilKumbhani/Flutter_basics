@@ -1,14 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_youtube/flutter_youtube.dart';
+import 'package:palette_generator/palette_generator.dart';
 import 'package:transformer_page_view/transformer_page_view.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:web_view_app/deatilPackage/ItemMovie.dart';
 import 'package:web_view_app/deatilPackage/WebSerivceCaller.dart';
-import 'package:web_view_app/deatilPackage/item_movie.dart';
 import 'package:web_view_app/model/MovieVideoModel.dart';
 import 'package:web_view_app/model/MoviesModel.dart';
-import 'package:flutter_youtube/flutter_youtube.dart';
-import 'dart:math' as math;
-import 'package:palette_generator/palette_generator.dart';
 
 class DetailScreen extends StatefulWidget {
   MoviesModel movieDetail;
@@ -45,39 +44,8 @@ class _detailScreen extends State<DetailScreen> {
     this.movies = movies;
   }
 
-//    region = Offset.zero & Size(MediaQuery.of(context).size.width, 250);
 
-/*
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: new Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.black,
-          title: Text(widget.movieDetail.title),
-        ),
-        body: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Column(
-            children: <Widget>[
-              Container(
-                height: 400,
-                width: 500,
-                child: PageView(
-                  children: _allImageItem(movies),
-                  pageSnapping: true,
-                ),
-              ),
-              Container(
-                child: createSimilarMovieListView(widget.movieDetail.id),
-                height: 200,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }*/
+
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +104,7 @@ class _detailScreen extends State<DetailScreen> {
                               position: info.position,
                               translationFactor: 500.0,
                               child: Hero(
-                                tag: widget.movieDetail.title +
+                                tag: widget.movieDetail.id.toString() +
                                     "thumb" +
                                     widget.movieTypeTitle,
                                 child: new Container(
@@ -207,6 +175,7 @@ class _detailScreen extends State<DetailScreen> {
                 ),
               ),
               Container(
+                alignment: Alignment.bottomCenter,
                 child: createSimilarMovieListView(movies[index].id),
                 height: 200,
               ),

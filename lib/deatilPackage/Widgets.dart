@@ -4,7 +4,7 @@
 
 import 'package:flutter/material.dart';
 
-import 'sections.dart';
+import 'Sections.dart';
 
 const double kSectionIndicatorWidth = 32.0;
 
