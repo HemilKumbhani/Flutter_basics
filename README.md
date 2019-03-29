@@ -7,6 +7,10 @@ A new Flutter application.
 This project is on Flutter and powered by TMDB.
 ![TalkiesPart1](https://github.com/HemilKumbhani/Flutter_basics/blob/master/assets/TalkiesPart1.gif)
 
+| SingUp Screen | SingIn Screen |
+| ------------------ | ------------------ |
+| <img src="./assets/TalkiesPart1.gif" height="400" alt="TalkiesPart1"/>  | <img src="./assets/TalkiesPart1.gif" height="400" alt="Screenshot"/>  |
+
 
 #Firebase Authentication
 ![TalkiesPart2](https://github.com/HemilKumbhani/Flutter_basics/blob/master/assets/TalkiesPart2.gif)
