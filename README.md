@@ -2,10 +2,14 @@
 
 A new Flutter application.
 
-## Getting Started
+## Preview
 
 This project is on Flutter and powered by TMDB.
 ![TalkiesPart1](https://github.com/HemilKumbhani/Flutter_basics/blob/master/assets/TalkiesPart1.gif)
+
+
+#Firebase Authentication
+![TalkiesPart2](https://github.com/HemilKumbhani/Flutter_basics/blob/master/assets/TalkiesPart2.gif)
 
 Project Includes Sign Up and Sign In Using Firabase Authentication
 
