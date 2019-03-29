@@ -7,6 +7,7 @@ A new Flutter application.
 This project is on Flutter and powered by TMDB.
 
 ##Firebase Authentication
+
 | Home Screen | Login Screen |
 | ------------------ | ------------------ |
 | <img src="./assets/TalkiesPart1.gif" height="500" alt="TalkiesPart1"/>  | <img src="./assets/TalkiesPart2.gif" height="500" alt="TalkiesPart2"/>  |
