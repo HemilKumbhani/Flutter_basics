@@ -5,7 +5,7 @@ A new Flutter application.
 ## Getting Started
 
 This project is on Flutter and powered by TMDB.
-![](TalkiesPart1.gif.gif)
+![](assets\TalkiesPart1.gif)
 
 Project Includes Sign Up and Sign In Using Firabase Authentication
 
