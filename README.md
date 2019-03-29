@@ -5,15 +5,15 @@ A new Flutter application.
 ## Preview
 
 This project is on Flutter and powered by TMDB.
-![TalkiesPart1](https://github.com/HemilKumbhani/Flutter_basics/blob/master/assets/TalkiesPart1.gif)
 
-| SingUp Screen | SingIn Screen |
+
+| Home Screen | Login Screen |
 | ------------------ | ------------------ |
-| <img src="./assets/TalkiesPart1.gif" height="400" alt="TalkiesPart1"/>  | <img src="./assets/TalkiesPart1.gif" height="400" alt="Screenshot"/>  |
+| <img src="./assets/TalkiesPart1.gif" height="500" alt="TalkiesPart1"/>  | <img src="./assets/TalkiesPart2.gif" height="500" alt="TalkiesPart2"/>  |
 
 
 #Firebase Authentication
-![TalkiesPart2](https://github.com/HemilKumbhani/Flutter_basics/blob/master/assets/TalkiesPart2.gif)
+
 
 Project Includes Sign Up and Sign In Using Firabase Authentication
 
