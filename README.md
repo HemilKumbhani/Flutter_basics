@@ -6,7 +6,7 @@ A new Flutter application.
 
 This project is on Flutter and powered by TMDB.
 
-##Firebase Authentication
+## Firebase Authentication
 
 | Home Screen | Login Screen |
 | ------------------ | ------------------ |
