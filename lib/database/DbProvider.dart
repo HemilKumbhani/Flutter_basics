@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:web_view_app/database/User.dart';
+import 'package:Talkies/database/User.dart';
 
 class DbProvider {
   static Database _database;

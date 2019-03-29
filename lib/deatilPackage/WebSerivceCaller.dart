@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:web_view_app/TMDBConfig.dart';
-import 'package:web_view_app/model/MovieVideoModel.dart';
-import 'package:web_view_app/model/MoviesModel.dart';
+import 'package:Talkies/TMDBConfig.dart';
+import 'package:Talkies/model/MovieVideoModel.dart';
+import 'package:Talkies/model/MoviesModel.dart';
 
 Future<List<MoviesModel>> getSimilarMovie(int movie_id) async {
   String movies =

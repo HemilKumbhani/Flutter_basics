@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:web_view_app/TMDBConfig.dart';
-import 'package:web_view_app/model/MoviesModel.dart';
+import 'package:Talkies/TMDBConfig.dart';
+import 'package:Talkies/model/MoviesModel.dart';
 
 Future<List<MoviesModel>> getMovies(String moviesType) async {
   String movies;

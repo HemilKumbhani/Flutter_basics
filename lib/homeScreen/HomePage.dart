@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:transparent_image/transparent_image.dart';
-import 'package:web_view_app/auth/LoginForm.dart';
-import 'package:web_view_app/database/DbProvider.dart';
-import 'package:web_view_app/deatilPackage/DetailScreen.dart';
-import 'package:web_view_app/homeScreen/WebServiceCall.dart';
-import 'package:web_view_app/model/MoviesModel.dart';
+import 'package:Talkies/auth/LoginForm.dart';
+import 'package:Talkies/database/DbProvider.dart';
+import 'package:Talkies/deatilPackage/DetailScreen.dart';
+import 'package:Talkies/homeScreen/WebServiceCall.dart';
+import 'package:Talkies/model/MoviesModel.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -24,7 +24,7 @@ class _homePage extends State<HomePage> {
         key: _scaffoldKey,
         appBar: new AppBar(
           backgroundColor: Colors.black,
-          title: new Text("NowPlayingMovies"),
+          title: new Text("Talkies"),
         ),
         body: Stack(
           children: <Widget>[
@@ -89,8 +89,7 @@ Widget createMovieListView(String movieType, GlobalKey<ScaffoldState> scaffoldKe
                   itemCount: movies.length,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, position) {
-                    MoviesModel movie = movies[position];
-                    return movieItem(movie, movieTypeTitle, context, position,
+                    return movieItem( movieTypeTitle, context, position,
                         movies, dbHelper,scaffoldKey);
                   },
                 ),
@@ -101,10 +100,10 @@ Widget createMovieListView(String movieType, GlobalKey<ScaffoldState> scaffoldKe
       });
 }
 
-Widget movieItem(MoviesModel movie, String movieTypeTitle, BuildContext context,
+Widget movieItem( String movieTypeTitle, BuildContext context,
     int position, List<MoviesModel> movies, DbProvider dbHelper, GlobalKey<ScaffoldState> scaffoldKey) {
   return Dismissible(
-    background: new Container(color: Colors.green),
+    background: new Container(color: Colors.red),
     direction: DismissDirection.vertical,
     onDismissed: (direction){
       scaffoldKey.currentState.setState((){
@@ -114,7 +113,7 @@ Widget movieItem(MoviesModel movie, String movieTypeTitle, BuildContext context,
       },
     key: Key("dismissied"),
     child: Hero(
-        tag: movie.id.toString() + "thumb" + movieTypeTitle,
+        tag: movies[position].id.toString() + "thumb" + movieTypeTitle,
         flightShuttleBuilder: (
           BuildContext flightContext,
           Animation<double> animation,
@@ -136,13 +135,13 @@ Widget movieItem(MoviesModel movie, String movieTypeTitle, BuildContext context,
                     context,
                     new CupertinoPageRoute(
                         builder: (_) => new LoginForm(
-                            movie, position, movieTypeTitle, movies)));
+                            movies[position], position, movieTypeTitle, movies)));
               } else {
                 Navigator.push(
                     context,
                     new CupertinoPageRoute(
                         builder: (_) => new DetailScreen(
-                            movie, position, movieTypeTitle, movies)));
+                            movies[position], position, movieTypeTitle, movies)));
               }
             });
 
@@ -157,7 +156,7 @@ Widget movieItem(MoviesModel movie, String movieTypeTitle, BuildContext context,
                   height: 150,
                   width: 100,
                   placeholder: kTransparentImage,
-                  image: "https://image.tmdb.org/t/p/w500/" + movie.posterPath,
+                  image: "https://image.tmdb.org/t/p/w500/" + movies[position].posterPath,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -170,7 +169,7 @@ Widget movieItem(MoviesModel movie, String movieTypeTitle, BuildContext context,
                       width: 100,
                       decoration: BoxDecoration(color: Colors.black45),
                       child: Text(
-                        movie.title,
+                        movies[position].title,
                         style: TextStyle(
                             fontSize: 15,
                             color: Colors.green,

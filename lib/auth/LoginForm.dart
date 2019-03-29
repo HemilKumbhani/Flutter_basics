@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:web_view_app/auth/Auth.dart';
-import 'package:web_view_app/database/DbProvider.dart';
-import 'package:web_view_app/database/User.dart';
-import 'package:web_view_app/deatilPackage/DetailScreen.dart';
-import 'package:web_view_app/model/MoviesModel.dart';
-import 'package:web_view_app/utils/Utils.dart';
+import 'package:Talkies/auth/Auth.dart';
+import 'package:Talkies/database/DbProvider.dart';
+import 'package:Talkies/database/User.dart';
+import 'package:Talkies/deatilPackage/DetailScreen.dart';
+import 'package:Talkies/model/MoviesModel.dart';
+import 'package:Talkies/utils/Utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginForm extends StatefulWidget {
@@ -44,7 +44,7 @@ class _LoginState extends State<LoginForm> {
                   shape: BoxShape.rectangle,
                 image: DecorationImage(
                     image: NetworkImage(
-                        'https://coloredbrain.com/wp-content/uploads/2016/07/login-background.jpg'),
+                        'http://13.232.138.90:8022/images/working-in-a-coffee-shop.jpg'),
                     fit: BoxFit.cover)),
             padding: EdgeInsets.all(20),
             child: Center(

@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
-import 'package:web_view_app/database/DbProvider.dart';
-import 'package:web_view_app/model/MoviesModel.dart';
+import 'package:Talkies/database/DbProvider.dart';
+import 'package:Talkies/model/MoviesModel.dart';
 
 List<Widget> createNowPlayingMovieItem(
     List<MoviesModel> movies, BuildContext context, String movieTypeTitle) {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:web_view_app/utils/Strings.dart';
+import 'package:Talkies/utils/Strings.dart';
 
 class webDetails extends StatelessWidget {
   @override

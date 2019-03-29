@@ -1,1 +1,1 @@
-export 'package:web_view_app/utils/Strings.dart';
+export 'package:Talkies/utils/Strings.dart';

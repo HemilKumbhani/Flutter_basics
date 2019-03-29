@@ -1,3 +1,4 @@
+import 'package:Talkies/utils/Strings.dart';
 import 'package:flutter/material.dart';
 
 import 'homeScreen/HomePage.dart';

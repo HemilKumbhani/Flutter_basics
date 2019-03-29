@@ -4,10 +4,10 @@ import 'package:flutter_youtube/flutter_youtube.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:transformer_page_view/transformer_page_view.dart';
 import 'package:transparent_image/transparent_image.dart';
-import 'package:web_view_app/deatilPackage/ItemMovie.dart';
-import 'package:web_view_app/deatilPackage/WebSerivceCaller.dart';
-import 'package:web_view_app/model/MovieVideoModel.dart';
-import 'package:web_view_app/model/MoviesModel.dart';
+import 'package:Talkies/deatilPackage/ItemMovie.dart';
+import 'package:Talkies/deatilPackage/WebSerivceCaller.dart';
+import 'package:Talkies/model/MovieVideoModel.dart';
+import 'package:Talkies/model/MoviesModel.dart';
 
 class DetailScreen extends StatefulWidget {
   MoviesModel movieDetail;
