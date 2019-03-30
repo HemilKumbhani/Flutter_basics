@@ -16,7 +16,7 @@ Database is included using SQFlite to use user info.
 | <img src="./assets/TalkiesPart1.gif" height="500" alt="TalkiesPart1"/>  | <img src="./assets/TalkiesPart2.gif" height="500" alt="TalkiesPart2"/>  |
 
 
-Project contains list of movies and its description in deatil 
+Project contains list of movies and its description in detail 
 
 | Detail Screen | SwipeToDismiss |
 | ------------------ | ------------------ |
