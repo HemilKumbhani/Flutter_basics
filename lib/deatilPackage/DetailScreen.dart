@@ -44,9 +44,6 @@ class _detailScreen extends State<DetailScreen> {
     this.movies = movies;
   }
 
-
-
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -84,11 +81,24 @@ class _detailScreen extends State<DetailScreen> {
                                 },
                                 child: new Container(
                                   height: 250,
-                                  child: FadeInImage.memoryNetwork(
-                                    placeholder: kTransparentImage,
-                                    image: "https://image.tmdb.org/t/p/w500/" +
-                                        movies[info.index].backdropPath,
-                                    fit: BoxFit.cover,
+                                  child: Stack(
+                                    children: <Widget>[
+                                      FadeInImage.memoryNetwork(
+                                        placeholder: kTransparentImage,
+                                        image:
+                                            "https://image.tmdb.org/t/p/w500/" +
+                                                movies[info.index].backdropPath,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      Align(
+                                        alignment: Alignment.center,
+                                        child: FadeInImage.assetNetwork(
+                                            placeholder: 'assets/youtube.png',
+                                            width: 55,
+                                            height: 55,
+                                            image: "youtube.png"),
+                                      )
+                                    ],
                                   ),
                                 ),
                               ),
@@ -196,15 +206,12 @@ class _detailScreen extends State<DetailScreen> {
   }
 
   void getVideos(int movie_id) {
-
-      Future<MovieVideoModel> videoModel=  getMovieVideoList(movie_id) ;
-      videoModel.then((MovieVideoModel model){
-        setState(() {
-          mVideoId=model.results[0].key;
-        });
+    Future<MovieVideoModel> videoModel = getMovieVideoList(movie_id);
+    videoModel.then((MovieVideoModel model) {
+      setState(() {
+        mVideoId = model.results[0].key;
       });
-
-
+    });
   }
 
   Widget createSimilarMovieListView(int movie_id) {
