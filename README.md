@@ -1,4 +1,4 @@
-# Flutter basics
+# Flutter Talkies(Cinema)
 
 A new Flutter application.
 
