@@ -17,11 +17,12 @@ class HomePage extends StatefulWidget {
 
 class _homePage extends State<HomePage> {
   ScrollController _scrollController = new ScrollController();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldState> _scafoldKey = new GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: _scaffoldKey,
+        key: _scafoldKey,
         appBar: new AppBar(
           backgroundColor: Colors.black,
           title: new Text("Talkies"),
@@ -31,10 +32,10 @@ class _homePage extends State<HomePage> {
             SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  createMovieListView("now_playing",_scaffoldKey),
-                  createMovieListView("popular",_scaffoldKey),
-                  createMovieListView("top_rated",_scaffoldKey),
-                  createMovieListView("upcoming",_scaffoldKey)
+                  createMovieListView("now_playing", _scafoldKey),
+                  createMovieListView("popular", _scafoldKey),
+                  createMovieListView("top_rated", _scafoldKey),
+                  createMovieListView("upcoming", _scafoldKey)
                 ],
               ),
             ),
@@ -46,7 +47,10 @@ class _homePage extends State<HomePage> {
   }
 }
 
-Widget createMovieListView(String movieType, GlobalKey<ScaffoldState> scaffoldKey) {
+int moviesLength;
+
+Widget createMovieListView(
+    String movieType, GlobalKey<ScaffoldState> scaffoldKey) {
   var dbHelper = DbProvider();
   dbHelper.initDb();
 
@@ -72,6 +76,7 @@ Widget createMovieListView(String movieType, GlobalKey<ScaffoldState> scaffoldKe
         if (!snapshot.hasData) return new Container();
         if (snapshot.hasData) {
           List<MoviesModel> movies = snapshot.data;
+          moviesLength = movies.length;
           return Column(
             children: <Widget>[
               Row(
@@ -86,11 +91,11 @@ Widget createMovieListView(String movieType, GlobalKey<ScaffoldState> scaffoldKe
               Container(
                 height: 150,
                 child: new ListView.builder(
-                  itemCount: movies.length,
+                  itemCount: moviesLength,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, position) {
-                    return movieItem( movieTypeTitle, context, position,
-                        movies, dbHelper,scaffoldKey);
+                    return movieItem(movieTypeTitle, context, position, movies,
+                        dbHelper, scaffoldKey);
                   },
                 ),
               ),
@@ -100,18 +105,18 @@ Widget createMovieListView(String movieType, GlobalKey<ScaffoldState> scaffoldKe
       });
 }
 
-Widget movieItem( String movieTypeTitle, BuildContext context,
-    int position, List<MoviesModel> movies, DbProvider dbHelper, GlobalKey<ScaffoldState> scaffoldKey) {
+Widget movieItem(
+    String movieTypeTitle,
+    BuildContext context,
+    int position,
+    List<MoviesModel> movies,
+    DbProvider dbHelper,
+    GlobalKey<ScaffoldState> scaffoldKey) {
   return Dismissible(
     background: new Container(color: Colors.red),
     direction: DismissDirection.vertical,
-    onDismissed: (direction){
-      scaffoldKey.currentState.setState((){
-        movies.removeAt(position);
-
-      });
-      },
-    key: Key("dismissied"),
+    onDismissed: (direction) {},
+    key: ObjectKey(movies[position]),
     child: Hero(
         tag: movies[position].id.toString() + "thumb" + movieTypeTitle,
         flightShuttleBuilder: (
@@ -134,14 +139,14 @@ Widget movieItem( String movieTypeTitle, BuildContext context,
                 Navigator.push(
                     context,
                     new CupertinoPageRoute(
-                        builder: (_) => new LoginForm(
-                            movies[position], position, movieTypeTitle, movies)));
+                        builder: (_) => new LoginForm(movies[position],
+                            position, movieTypeTitle, movies)));
               } else {
                 Navigator.push(
                     context,
                     new CupertinoPageRoute(
-                        builder: (_) => new DetailScreen(
-                            movies[position], position, movieTypeTitle, movies)));
+                        builder: (_) => new DetailScreen(movies[position],
+                            position, movieTypeTitle, movies)));
               }
             });
 
@@ -156,7 +161,8 @@ Widget movieItem( String movieTypeTitle, BuildContext context,
                   height: 150,
                   width: 100,
                   placeholder: kTransparentImage,
-                  image: "https://image.tmdb.org/t/p/w500/" + movies[position].posterPath,
+                  image: "https://image.tmdb.org/t/p/w500/" +
+                      movies[position].posterPath,
                   fit: BoxFit.cover,
                 ),
               ),

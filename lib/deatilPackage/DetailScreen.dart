@@ -1,3 +1,4 @@
+import 'package:Talkies/model/MovieCreditsModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_youtube/flutter_youtube.dart';
@@ -48,6 +49,7 @@ class _detailScreen extends State<DetailScreen> {
   Widget build(BuildContext context) {
     return Container(
       child: new Scaffold(
+        backgroundColor: Colors.black,
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Column(
@@ -148,9 +150,10 @@ class _detailScreen extends State<DetailScreen> {
                                     Container(
                                       child: Text(
                                         movies[info.index].title,
+                                        textScaleFactor: 1.5,
                                         style: TextStyle(
                                             fontSize: 15,
-                                            color: Colors.green,
+                                            color: Colors.deepOrangeAccent,
                                             fontStyle: FontStyle.italic),
                                       ),
                                       margin: EdgeInsets.only(top: 20),
@@ -168,7 +171,10 @@ class _detailScreen extends State<DetailScreen> {
                                           margin: EdgeInsets.only(top: 10),
                                           child: SingleChildScrollView(
                                               child: new Text(
-                                                  movies[info.index].overview)),
+                                            movies[info.index].overview,
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          )),
                                         ),
                                       ],
                                     )
@@ -184,6 +190,13 @@ class _detailScreen extends State<DetailScreen> {
                   scrollDirection: Axis.horizontal,
                 ),
               ),
+              Container(
+                  margin: EdgeInsets.all(10),
+                  child: Text("Cast",
+                      style: TextStyle(color: Colors.white),
+                      textScaleFactor: 1.5)),
+              Container(
+                  height: 200, child: createCreditsMovie(movies[index].id)),
               Container(
                 alignment: Alignment.bottomCenter,
                 child: createSimilarMovieListView(movies[index].id),
@@ -208,10 +221,61 @@ class _detailScreen extends State<DetailScreen> {
   void getVideos(int movie_id) {
     Future<MovieVideoModel> videoModel = getMovieVideoList(movie_id);
     videoModel.then((MovieVideoModel model) {
-      setState(() {
-        mVideoId = model.results[0].key;
-      });
+      mVideoId = model.results[0].key;
     });
+  }
+
+  Widget createCreditsMovie(int movie_id) {
+    return new FutureBuilder(
+      future: getMovieCreditsList(movie_id),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (!snapshot.hasData)
+          return new Container(
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        if (snapshot.hasData) {
+          MovieCreditsModel movieCredits = snapshot.data;
+          return ListView.builder(
+              itemCount: movieCredits.cast.length,
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, position) {
+                return Container(
+                  height: 200,
+                  child: new Column(
+                    children: <Widget>[
+                      new Container(
+                          width: 120.0,
+                          height: 120.0,
+                          margin: EdgeInsets.all(5),
+                          decoration: new BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: new DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: new NetworkImage(
+                                      "https://image.tmdb.org/t/p/w500/" +
+                                          movieCredits
+                                              .cast[position].profilePath)))),
+                      new Text(movieCredits.cast[position].name,
+                          style: TextStyle(color: Colors.white)),
+                      Container(
+                        width: 100,
+                        alignment: Alignment.center,
+                        child: new Text(
+                          movieCredits.cast[position].character,
+                          style: TextStyle(color: Colors.white70),
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              });
+        }
+      },
+    );
   }
 
   Widget createSimilarMovieListView(int movie_id) {
@@ -232,7 +296,9 @@ class _detailScreen extends State<DetailScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Container(
-                      child: Text("Similar Movie"),
+                      child: Text("Similar Movie",
+                          textScaleFactor: 1.5,
+                          style: TextStyle(color: Colors.white)),
                       margin: EdgeInsets.all(10),
                     ),
                   ],

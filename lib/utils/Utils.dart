@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+
 
 InputDecoration textDecoration(String label) {
   return InputDecoration(
@@ -20,3 +22,15 @@ InputDecoration textDecoration(String label) {
     labelText: label,
   );
 }
+
+Future<bool> isNetworkAvailable() async {
+  try {
+    final result = await InternetAddress.lookup('google.com');
+    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+      return true;
+    }
+  } on SocketException catch (_) {
+    return false;
+  }
+}
+
