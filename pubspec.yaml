@@ -24,7 +24,9 @@ dependencies:
   flutter_youtube: "^1.1.4"
   transformer_page_view: '0.1.5'
   geolocator: '^3.0.1'
+  intl: ^0.15.8
   palette_generator:
+
 
 
   # The following adds the Cupertino Icons font to your application.

@@ -1,3 +1,4 @@
+import 'package:Talkies/actordetail/ActorDetail.dart';
 import 'package:Talkies/model/MovieCreditsModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -250,6 +251,11 @@ class _detailScreen extends State<DetailScreen> {
                           width: 120.0,
                           height: 120.0,
                           margin: EdgeInsets.all(5),
+                          child: GestureDetector(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>ActorDetail(movieCredits.cast[position].id),fullscreenDialog: true));
+                            },
+                          ),
                           decoration: new BoxDecoration(
                               shape: BoxShape.circle,
                               image: new DecorationImage(
@@ -288,7 +294,7 @@ class _detailScreen extends State<DetailScreen> {
                 child: CircularProgressIndicator(),
               ),
             );
-          if (snapshot.hasData) {
+         else if (snapshot.hasData) {
             List<MoviesModel> movies = snapshot.data;
             return Column(
               children: <Widget>[
