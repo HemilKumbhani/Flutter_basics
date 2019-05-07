@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:Talkies/actordetail/WebServiceCaller.dart';
+import 'package:Talkies/deatilPackage/DetailScreen.dart';
 import 'package:Talkies/model/ActorDetailModel.dart';
 import 'package:Talkies/model/ActorMoviesModel.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -17,6 +19,8 @@ class ActorDetail extends StatefulWidget {
 }
 
 class _ActorDetailState extends State<ActorDetail> {
+  ScrollController _scrollController = new ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +28,6 @@ class _ActorDetailState extends State<ActorDetail> {
       body: Container(
         height: MediaQuery.of(context).size.height,
         child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
           child: Container(
             child: getActorDetails(),
           ),
@@ -39,6 +42,7 @@ class _ActorDetailState extends State<ActorDetail> {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (!snapshot.hasData)
           return new Container(
+            height: MediaQuery.of(context).size.height,
             child: Center(
               child: CircularProgressIndicator(),
             ),
@@ -48,7 +52,7 @@ class _ActorDetailState extends State<ActorDetail> {
           return Container(
             alignment: Alignment.center,
             child: Column(
-              mainAxisSize: MainAxisSize.max,
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Container(
                   width: 120.0,
@@ -73,20 +77,20 @@ class _ActorDetailState extends State<ActorDetail> {
                       child: Container(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                            "DOB : " +
+                            "Birth Date : " +
                                 DateFormat('dd-MM-yyyy')
                                     .format(actorDetail.birthday),
                             textScaleFactor: 1.5,
-                            style: TextStyle(color: Colors.white)),
+                            style: TextStyle(color: Colors.white,fontSize: 10,decoration: TextDecoration.underline,)),
                       ),
                     ),
                     Align(
                       alignment: Alignment.centerRight,
                       child: Container(
                         width: 150,
-                        child: Text("BirthPlace: " + actorDetail.placeOfBirth,
+                        child: Text("Birth Place: " + actorDetail.placeOfBirth,
                             textScaleFactor: 1.5,
-                            style: TextStyle(color: Colors.white)),
+                            style: TextStyle(color: Colors.white,fontSize: 10,decoration: TextDecoration.underline,)),
                       ),
                     ),
                   ]),
@@ -102,7 +106,6 @@ class _ActorDetailState extends State<ActorDetail> {
                       style: TextStyle(color: Colors.white),
                     )),
                 Container(
-                  height: MediaQuery.of(context).size.height,
                   child: getActorMovies(),
                 )
               ],
@@ -126,45 +129,61 @@ class _ActorDetailState extends State<ActorDetail> {
           } else if (snapshot.hasData) {
             ActorMoviesModel actorMovies = snapshot.data;
             return GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: actorMovies.cast.length,
                 gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3),
                 itemBuilder: (BuildContext context, int position) {
-                  return Container(
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.only(left: 2.5, right: 2.5),
-                          child: FadeInImage.memoryNetwork(
-                            height: 150,
-                            width: 100,
-                            placeholder: kTransparentImage,
-                            image: "https://image.tmdb.org/t/p/w500/" +
-                                actorMovies.cast[position].posterPath,
-                            fit: BoxFit.cover,
+                  var posterPath = actorMovies.cast[position].posterPath ?? "";
+                  if (posterPath != null && posterPath.isNotEmpty) {
+                    posterPath =
+                        "https://image.tmdb.org/t/p/w500/" + posterPath;
+                  }
+                  return GestureDetector(
+                    onTap: (){
+                      Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                              builder: (context) =>
+                                  DetailScreen(movie, position, movieTypeTitle, movies),
+                              fullscreenDialog: true));
+                    },
+                    child: Container(
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: <Widget>[
+                          Container(
+                            margin: EdgeInsets.only(left: 1.5, right: 1.5),
+                            child: FadeInImage.assetNetwork(
+                              height: 150,
+                              width: 100,
+                              placeholder: 'assets/images/icons8-picture-96.png',
+                              image: posterPath,
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                        ),
-                        Align(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Container(
-                                padding: EdgeInsets.all(2.5),
-                                width: 100,
-                                decoration:
-                                    BoxDecoration(color: Colors.black45),
-                                child: Text(
-                                  actorMovies.cast[position].title,
-                                  style: TextStyle(
-                                      fontSize: 15, color: Colors.white),
+                          Align(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Container(
+                                  padding: EdgeInsets.all(2.5),
+                                  width: 100,
+                                  decoration:
+                                      BoxDecoration(color: Colors.black45),
+                                  child: Text(
+                                    actorMovies.cast[position].title,
+                                    style: TextStyle(
+                                        fontSize: 15, color: Colors.white),
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          alignment: Alignment.bottomCenter,
-                        )
-                      ],
+                              ],
+                            ),
+                            alignment: Alignment.bottomCenter,
+                          )
+                        ],
+                      ),
                     ),
                   );
                 });
