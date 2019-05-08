@@ -4,8 +4,8 @@ import 'package:transparent_image/transparent_image.dart';
 import 'package:Talkies/deatilPackage/DetailScreen.dart';
 import 'package:Talkies/model/MoviesModel.dart';
 
-Hero movieItem(MoviesModel movie, String movieTypeTitle, BuildContext context,
-    int position, List<MoviesModel> movies) {
+Hero movieItem(Result movie, String movieTypeTitle, BuildContext context,
+    int position, List<Result> movies) {
   return Hero(
       tag: movie.id.toString() + "thumb" + movieTypeTitle,
       child: GestureDetector(

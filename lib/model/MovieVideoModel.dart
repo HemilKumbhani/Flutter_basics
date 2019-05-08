@@ -12,7 +12,7 @@ String movieVideoModelToJson(MovieVideoModel data) {
 
 class MovieVideoModel {
   int id;
-  List<Result> results;
+  List<VideoResult> results;
 
   MovieVideoModel({
     this.id,
@@ -22,8 +22,8 @@ class MovieVideoModel {
   factory MovieVideoModel.fromJson(Map<String, dynamic> json) =>
       new MovieVideoModel(
         id: json["id"],
-        results: new List<Result>.from(
-            json["results"].map((x) => Result.fromJson(x))),
+        results: new List<VideoResult>.from(
+            json["results"].map((x) => VideoResult.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -32,7 +32,7 @@ class MovieVideoModel {
       };
 }
 
-class Result {
+class VideoResult {
   String id;
   String iso6391;
   String iso31661;
@@ -42,7 +42,7 @@ class Result {
   int size;
   String type;
 
-  Result({
+  VideoResult({
     this.id,
     this.iso6391,
     this.iso31661,
@@ -53,7 +53,7 @@ class Result {
     this.type,
   });
 
-  factory Result.fromJson(Map<String, dynamic> json) => new Result(
+  factory VideoResult.fromJson(Map<String, dynamic> json) => new VideoResult(
         id: json["id"],
         iso6391: json["iso_639_1"],
         iso31661: json["iso_3166_1"],

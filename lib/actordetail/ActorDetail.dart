@@ -81,7 +81,11 @@ class _ActorDetailState extends State<ActorDetail> {
                                 DateFormat('dd-MM-yyyy')
                                     .format(actorDetail.birthday),
                             textScaleFactor: 1.5,
-                            style: TextStyle(color: Colors.white,fontSize: 10,decoration: TextDecoration.underline,)),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              decoration: TextDecoration.underline,
+                            )),
                       ),
                     ),
                     Align(
@@ -90,7 +94,11 @@ class _ActorDetailState extends State<ActorDetail> {
                         width: 150,
                         child: Text("Birth Place: " + actorDetail.placeOfBirth,
                             textScaleFactor: 1.5,
-                            style: TextStyle(color: Colors.white,fontSize: 10,decoration: TextDecoration.underline,)),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              decoration: TextDecoration.underline,
+                            )),
                       ),
                     ),
                   ]),
@@ -141,24 +149,27 @@ class _ActorDetailState extends State<ActorDetail> {
                         "https://image.tmdb.org/t/p/w500/" + posterPath;
                   }
                   return GestureDetector(
-                    onTap: (){
-                      Navigator.push(
+                    onTap: () {
+                      Navigator.pushReplacement(
                           context,
-                          CupertinoPageRoute(
-                              builder: (context) =>
-                                  DetailScreen(movie, position, movieTypeTitle, movies),
-                              fullscreenDialog: true));
+                          new CupertinoPageRoute(
+                              builder: (_) => new DetailScreen(
+                                  actorMovies.cast[position],
+                                  position,
+                                  actorMovies.cast[position].title,
+                                  actorMovies.cast)));
                     },
                     child: Container(
                       child: Stack(
                         alignment: Alignment.center,
                         children: <Widget>[
                           Container(
-                            margin: EdgeInsets.only(left: 1.5, right: 1.5),
+                            margin: EdgeInsets.all(10),
                             child: FadeInImage.assetNetwork(
-                              height: 150,
-                              width: 100,
-                              placeholder: 'assets/images/icons8-picture-96.png',
+                              height: 200,
+                              width: 150,
+                              placeholder:
+                                  'assets/images/icons8-picture-96.png',
                               image: posterPath,
                               fit: BoxFit.cover,
                             ),
@@ -169,7 +180,8 @@ class _ActorDetailState extends State<ActorDetail> {
                               children: <Widget>[
                                 Container(
                                   padding: EdgeInsets.all(2.5),
-                                  width: 100,
+                                  margin: EdgeInsets.all(10),
+                                  width: 150,
                                   decoration:
                                       BoxDecoration(color: Colors.black45),
                                   child: Text(

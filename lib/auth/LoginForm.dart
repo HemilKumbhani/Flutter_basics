@@ -9,10 +9,10 @@ import 'package:Talkies/utils/Utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginForm extends StatefulWidget {
-  MoviesModel movie;
+  Result movie;
   int position;
   String movieTypeTitle;
-  List<MoviesModel> movies;
+  List<Result> movies;
   LoginForm(this.movie, this.position, this.movieTypeTitle, this.movies);
 
   @override

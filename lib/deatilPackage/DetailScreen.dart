@@ -12,39 +12,28 @@ import 'package:Talkies/model/MovieVideoModel.dart';
 import 'package:Talkies/model/MoviesModel.dart';
 
 class DetailScreen extends StatefulWidget {
-  MoviesModel movieDetail;
+  Result movieDetail;
   int index;
   String movieTypeTitle;
-  List<MoviesModel> movies;
+  List<Result> movies;
 
-  DetailScreen(this.movieDetail, int index, String movieTypeTitle,
-      List<MoviesModel> movies) {
-    this.index = index;
-    this.movies = movies;
-    this.movieTypeTitle = movieTypeTitle;
-  }
+  DetailScreen(this.movieDetail, this.index, this.movieTypeTitle,
+      this.movies) ;
 
   @override
   State<StatefulWidget> createState() {
     print(movieDetail.toString());
-    return _detailScreen(index, movieDetail, movies);
+    return _detailScreen();
   }
 }
 
 class _detailScreen extends State<DetailScreen> {
   List<String> posterList = new List();
-  int index;
-  List<MoviesModel> movies;
   Rect region;
   PaletteGenerator paletteGenerator;
   var mVideoId;
 
-  _detailScreen(int index, MoviesModel movieDetail, List<MoviesModel> movies) {
-    this.index = index;
-    posterList.add(movieDetail.posterPath);
-    posterList.add(movieDetail.backdropPath);
-    this.movies = movies;
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -62,12 +51,12 @@ class _detailScreen extends State<DetailScreen> {
                 width: 500,
                 child: TransformerPageView(
                   loop: false,
-                  itemCount: movies.length,
-                  index: index,
+                  itemCount: widget.movies.length,
+                  index: widget.index,
                   onPageChanged: (position) {
-                    getVideos(movies[position].id);
+                    getVideos(widget.movies[position].id);
                     setState(() {
-                      index = position;
+                      widget.index = position;
                     });
                   },
                   transformer: new PageTransformerBuilder(
@@ -90,7 +79,7 @@ class _detailScreen extends State<DetailScreen> {
                                         placeholder: kTransparentImage,
                                         image:
                                             "https://image.tmdb.org/t/p/w500/" +
-                                                movies[info.index].backdropPath,
+                                                widget.movies[info.index].backdropPath,
                                         fit: BoxFit.cover,
                                       ),
                                       Align(
@@ -127,7 +116,7 @@ class _detailScreen extends State<DetailScreen> {
                                       image: DecorationImage(
                                           image: NetworkImage(
                                               "https://image.tmdb.org/t/p/w500/" +
-                                                  movies[info.index]
+                                                  widget.movies[info.index]
                                                       .posterPath),
                                           fit: BoxFit.contain)),
                                 ),
@@ -150,7 +139,7 @@ class _detailScreen extends State<DetailScreen> {
                                   children: <Widget>[
                                     Container(
                                       child: Text(
-                                        movies[info.index].title,
+                                        widget.movies[info.index].title,
                                         textScaleFactor: 1.5,
                                         style: TextStyle(
                                             fontSize: 15,
@@ -172,7 +161,7 @@ class _detailScreen extends State<DetailScreen> {
                                           margin: EdgeInsets.only(top: 10),
                                           child: SingleChildScrollView(
                                               child: new Text(
-                                            movies[info.index].overview,
+                                           widget. movies[info.index].overview,
                                             style:
                                                 TextStyle(color: Colors.white),
                                           )),
@@ -197,10 +186,10 @@ class _detailScreen extends State<DetailScreen> {
                       style: TextStyle(color: Colors.white),
                       textScaleFactor: 1.5)),
               Container(
-                  height: 200, child: createCreditsMovie(movies[index].id)),
+                  height: 200, child: createCreditsMovie(widget.movies[widget.index].id)),
               Container(
                 alignment: Alignment.bottomCenter,
-                child: createSimilarMovieListView(movies[index].id),
+                child: createSimilarMovieListView(widget.movies[widget.index].id),
                 height: 200,
               ),
             ],
@@ -295,7 +284,7 @@ class _detailScreen extends State<DetailScreen> {
               ),
             );
          else if (snapshot.hasData) {
-            List<MoviesModel> movies = snapshot.data;
+            MoviesModel movies = snapshot.data;
             return Column(
               children: <Widget>[
                 Row(
@@ -312,13 +301,12 @@ class _detailScreen extends State<DetailScreen> {
                 Container(
                   height: 150,
                   child: new ListView.builder(
-                    itemCount: movies.length,
+                    itemCount: movies.results.length,
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, position) {
-                      MoviesModel movie = movies[position];
-                      return movieItem(movie, widget.movieTypeTitle, context,
-                          position, movies);
+                      return movieItem(movies.results[position], movies.results[position].title, context,
+                          position,movies.results);
                     },
                   ),
                 ),

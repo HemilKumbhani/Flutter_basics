@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:Talkies/TMDBConfig.dart';
 import 'package:Talkies/model/MoviesModel.dart';
 
-Future<List<MoviesModel>> getMovies(String moviesType) async {
+Future<MoviesModel> getMovies(String moviesType) async {
   String movies;
   switch (moviesType) {
     case "now_playing":
@@ -46,7 +46,7 @@ Future<List<MoviesModel>> getMovies(String moviesType) async {
 
       List resultList = data['results'];
 
-      List<MoviesModel> list = createNowPlayingList(resultList);
+      MoviesModel list = MoviesModel.fromJson(data);
       return list;
     } else {
       print("Failed http call.");
@@ -57,21 +57,4 @@ Future<List<MoviesModel>> getMovies(String moviesType) async {
   return null;
 }
 
-List<MoviesModel> createNowPlayingList(List data) {
-  List<MoviesModel> list = new List();
-  for (int i = 0; i < data.length; i++) {
-    var id = data[i]["id"];
-    String title = data[i]["title"];
-    String posterPath = data[i]["poster_path"];
-    String backdropImage = data[i]["backdrop_path"];
-    String originalTitle = data[i]["original_title"];
-    var voteAverage = data[i]["vote_average"];
-    String overview = data[i]["overview"];
-    String releaseDate = data[i]["release_date"];
 
-    MoviesModel movie = MoviesModel(id, title, posterPath, backdropImage,
-        originalTitle, voteAverage, overview, releaseDate);
-    list.add(movie);
-  }
-  return list;
-}

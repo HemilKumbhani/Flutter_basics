@@ -29,14 +29,17 @@ class _homePage extends State<HomePage> {
         ),
         body: Stack(
           children: <Widget>[
-            SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  createMovieListView("now_playing", _scafoldKey),
-                  createMovieListView("popular", _scafoldKey),
-                  createMovieListView("top_rated", _scafoldKey),
-                  createMovieListView("upcoming", _scafoldKey)
-                ],
+            Container(
+              color: Colors.black,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    createMovieListView("now_playing", _scafoldKey),
+                    createMovieListView("popular", _scafoldKey),
+                    createMovieListView("top_rated", _scafoldKey),
+                    createMovieListView("upcoming", _scafoldKey)
+                  ],
+                ),
               ),
             ),
             Align(
@@ -75,8 +78,8 @@ Widget createMovieListView(
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (!snapshot.hasData) return new Container();
         if (snapshot.hasData) {
-          List<MoviesModel> movies = snapshot.data;
-          moviesLength = movies.length;
+          MoviesModel movies = snapshot.data;
+          moviesLength = movies.results.length;
           return Column(
             children: <Widget>[
               Row(
@@ -94,7 +97,7 @@ Widget createMovieListView(
                   itemCount: moviesLength,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, position) {
-                    return movieItem(movieTypeTitle, context, position, movies,
+                    return movieItem(movieTypeTitle, context, position, movies.results,
                         dbHelper, scaffoldKey);
                   },
                 ),
@@ -109,7 +112,7 @@ Widget movieItem(
     String movieTypeTitle,
     BuildContext context,
     int position,
-    List<MoviesModel> movies,
+    List<Result> movies,
     DbProvider dbHelper,
     GlobalKey<ScaffoldState> scaffoldKey) {
   return Dismissible(
