@@ -227,11 +227,18 @@ class _detailScreen extends State<DetailScreen> {
           );
         if (snapshot.hasData) {
           MovieCreditsModel movieCredits = snapshot.data;
+
           return ListView.builder(
               itemCount: movieCredits.cast.length,
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, position) {
+                var posterPath= movieCredits.cast[position].profilePath;
+                if(posterPath!=null && posterPath.isNotEmpty){
+                  posterPath="https://image.tmdb.org/t/p/w500/"+posterPath;
+                }else{
+                  posterPath= " ";
+                }
                 return Container(
                   height: 200,
                   child: new Column(
@@ -250,9 +257,7 @@ class _detailScreen extends State<DetailScreen> {
                               image: new DecorationImage(
                                   fit: BoxFit.cover,
                                   image: new NetworkImage(
-                                      "https://image.tmdb.org/t/p/w500/" +
-                                          movieCredits
-                                              .cast[position].profilePath)))),
+                                      posterPath)))),
                       new Text(movieCredits.cast[position].name,
                           style: TextStyle(color: Colors.white)),
                       Container(
